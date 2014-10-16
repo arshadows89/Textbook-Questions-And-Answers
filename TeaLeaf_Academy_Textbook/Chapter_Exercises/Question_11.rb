@@ -1,0 +1,2 @@
+#Look at several Rails/Ruby online API sources and say which one you like best and why.
+puts 'I like ruby-doc.org becuase they give you a nice list of methods and classes for you to go through. They also have a nice filter section where i can sit there and filter all the methods that work on arrays or hashes. or i can just click the method hash and it gives me a big list. Also goes into detail on how they work and gives examples that are easy to undersand.'
