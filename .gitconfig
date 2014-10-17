@@ -8,3 +8,6 @@
   llog = log --date=local
 [rerere]
   enabled = true
+[user]
+	email = dooffycom@gmail.com
+	name = Cameron Snyder
