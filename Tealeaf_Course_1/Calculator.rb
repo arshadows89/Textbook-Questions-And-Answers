@@ -80,7 +80,6 @@ end
 puts 'so you want to '+@word_method.to_s+' '+first_number.to_s+' by what number?'
 second_number = gets.chomp
 
-
 if @word_method == 'subtract'
   number_fail(second_number)
   second_number = @number
