@@ -6,7 +6,7 @@ end
 def number_fail(number)
   @number = number
   while @number != nil
-    if @number == 0
+    if @number == '0'
       break
     elsif @number.to_i == 0
       puts 'You entered '+@number.to_s+' which isn\'t a number. Please enter a new number'
@@ -16,6 +16,20 @@ def number_fail(number)
         break
       end
     else
+      break
+    end
+  end
+end
+
+def divide_by_zero_fail(number) 
+  @number = number
+  while @number != nil
+    number_fail(number) 
+    if @number == '0'
+      puts 'You cant divide by 0. Please enter a new number'
+      number = gets.chomp
+      @number = number 
+    else 
       break
     end
   end
@@ -65,16 +79,23 @@ end
 
 puts 'so you want to '+@word_method.to_s+' '+first_number.to_s+' by what number?'
 second_number = gets.chomp
-number_fail(second_number)
-second_number = @number
+
 
 if @word_method == 'subtract'
+  number_fail(second_number)
+  second_number = @number
   answer = first_number.to_i - second_number.to_i
 elsif @word_method == 'add'
+  number_fail(second_number)
+  second_number = @number
   answer = first_number.to_i + second_number.to_i
 elsif @word_method == 'multiply'
+  number_fail(second_number) 
+  second_number = @number     
   answer = first_number.to_i * second_number.to_i
-elsif w@ord_method == 'divide'
+elsif @word_method == 'divide'
+  divide_by_zero_fail(second_number)
+  second_number = @number
   answer = first_number.to_f / second_number.to_f
 end
 
