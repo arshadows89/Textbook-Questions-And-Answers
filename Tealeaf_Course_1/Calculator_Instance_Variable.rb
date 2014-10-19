@@ -1,3 +1,4 @@
+#Calculator App using Instance Variables.
 def calc_method_info(word_method, calc_method)
   @calc_method = calc_method.to_s
   @word_method = word_method.to_s
@@ -71,7 +72,7 @@ while calc_method_tf == false
     calc_method_info('subtract', '-')
     break
    else
-    puts 'You didnt respond with a function i could do. Please say one of the following.     add, subtract, multiply, divide, +, -, /, or *'
+    puts 'You didnt respond with a function I could do. Please say one of the following.     add, subtract, multiply, divide, +, -, /, or *'
     calc_method = gets.chomp
     calc_method_tf == false
   end
