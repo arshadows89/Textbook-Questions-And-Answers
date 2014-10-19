@@ -28,20 +28,21 @@ def rock_paper_scissors_game
       #anything else here will be a tie thus restart program
       puts 'You both tied. Go again.'
       rock_paper_scissors_game
+      exit
     end
   end
   
-  def play_again
-    puts 'Do you want to play another round of Rock, Paper, Scissors? Yes or No?'
-    play_again_response = gets.chomp
-    while play_again_response != nil
+  def play_again(play_again_response)
+    while play_again_response.downcase != 'no'
+      puts 'Do you want to play another round of Rock, Paper, Scissors? Yes or No?'
+      play_again_response = gets.chomp
       if play_again_response.downcase == 'yes'
         puts "OK! Lets play again!"
         rock_paper_scissors_game
+        exit
       elsif  play_again_response.downcase == 'no'
-        break
       else
-        puts 'You didnt enter Yes or No. Please type Yes or No if you want to play again.'
+        puts 'You enetered '+play_again_response.capitalize+' which isnt Yes or No. Please type Yes or No if you want to play again.'
         play_again_response = gets.chomp
       end
     end
@@ -63,7 +64,7 @@ def rock_paper_scissors_game
   cpu_answer
   puts 'You chose '+@answer.capitalize+' and the computer chose '+@cpu_answer+'!'
   winner
-  play_again
+  play_again('yes')
 end
 
 puts 'Lets play a game of rock, paper, scissors'
