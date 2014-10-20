@@ -1,4 +1,6 @@
 # Calculator app
+
+# Method to see if your inputing a number or not
 def number_fail(number)
   number = number
   while number != nil
@@ -20,6 +22,7 @@ def number_fail(number)
   end
 end
 
+# Method to check if ur entering a number and checks to make sure if ur dividing your not using a 0
 def divide_by_zero_fail(number) 
   while number != nil
     number = number_fail(number) 
@@ -42,6 +45,7 @@ puts 'and what do you want to do to that number?(multiply, add, divide, subtract
 calc_method = gets.chomp
 calc_method_tf = false
 
+#Checks to see if your inputing a operatation the program can use. And converts operation into its name.
 while calc_method_tf == false
   if calc_method == '-'
     calc_method = '-'
@@ -85,6 +89,7 @@ end
 puts 'so you want to '+word_method.to_s+' '+first_number.to_s+' by what number?'
 second_number = gets.chomp
 
+# Created the equation and solves it
 if word_method == 'subtract'
   second_number = number_fail(second_number)
   answer = first_number.to_i - second_number.to_i

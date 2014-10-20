@@ -1,5 +1,9 @@
 ###Rock Paper scissor###
+
+# Method that will run the whole Rock Paper Scissors game
 def rock_paper_scissors_game
+  
+  # Creates What hand (rock, paper, scissors) that the cpu uses
   def cpu_answer
   cpu_answer = rand(3)
     if cpu_answer == 0
@@ -11,6 +15,8 @@ def rock_paper_scissors_game
     end
   end
 
+  # Compares your hand and computers hand to see who won or tied
+  # if tied will run the program again
   def winner
     if  (@answer.downcase == 'rock') && (@cpu_answer.downcase == 'paper')
       puts 'YOU LOSE'
@@ -32,6 +38,7 @@ def rock_paper_scissors_game
     end
   end
   
+   # Asks if you want to play again after a winner is decided
   def play_again(play_again_response)
     while play_again_response.downcase != 'no'
       puts 'Do you want to play another round of Rock, Paper, Scissors? Yes or No?'
@@ -52,6 +59,7 @@ def rock_paper_scissors_game
   puts 'What do you choose, Rock, Paper, or Scissors?'
   @answer = gets.chomp
 
+    # Gets what the user is picking for his hand (rock, paper, or scissors)
   while @answer != nil
     if (@answer.downcase == 'rock') || (@answer.downcase == 'paper') || (@answer.downcase == 'scissors')
       break
@@ -67,5 +75,6 @@ def rock_paper_scissors_game
   play_again('yes')
 end
 
+# This is the start of the program
 puts 'Lets play a game of rock, paper, scissors'
 rock_paper_scissors_game
