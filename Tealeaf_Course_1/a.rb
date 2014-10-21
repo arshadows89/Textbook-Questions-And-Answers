@@ -196,3 +196,7 @@ def turns
   player turn
   who_won
 end
+
+# make section for players turn
+# fix the board to hash use gameboard references
+# gameboard and chat doesnt move when entering numbers. (might need to look at how they did that) might be not using puts which pushes to a new line?
