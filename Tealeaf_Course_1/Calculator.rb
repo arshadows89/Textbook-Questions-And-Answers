@@ -2,22 +2,18 @@
 
 # Method to see if your inputing a number or not
 def number_fail(number)
-  number = number
   while number != nil
     if number == '0'
-      return number
-      break
+      return number 
     elsif number.to_i == 0
       puts 'You entered '+number.to_s+' which isn\'t a number. Please enter a new number'
       number = gets.chomp 
       number = number
       if number == '0'
-        return number
-        break
+        return number  
       end
     else
-      return number
-      break
+      return number   
     end
   end
 end
@@ -31,7 +27,6 @@ def divide_by_zero_fail(number)
       number = gets.chomp
     else 
       return number
-      break
     end
   end
 end
