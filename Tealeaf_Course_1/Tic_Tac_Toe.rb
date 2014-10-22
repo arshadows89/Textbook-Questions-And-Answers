@@ -43,7 +43,7 @@ def tic_tac_toe
      exit
      
      #its a tie so ask them to play again
-    elsif total_picks == [1, 2, 3 ,4 ,5 ,6, 7, 8, 9]
+    elsif total_picks.sort == [1, 2, 3 ,4 ,5 ,6, 7, 8, 9]
      puts 'You Tied'
      play_again
     else
@@ -59,12 +59,11 @@ def tic_tac_toe
       print ' '+left.to_s+''
     end
     puts '.'
+    players_choice = gets.chomp
   end
   
   # Gets player move, and makes changes to the board
-  def players_turn(gameboard, player_picks, total_picks)
-    whats_left (total_picks)
-    player_choice = gets.chomp
+    def players_turn(gameboard, player_picks, total_picks, player_choice)
     while player_choice.to_i == 0
       if player_choice == 0
         board(gameboard)
@@ -103,9 +102,8 @@ def tic_tac_toe
       else 
         board(gameboard)
         puts 'You picked a spot that wasnt available, try again.'
-        whats_left(total_picks)
-		    player_choice = gets.chomp
-        players_turn(gameboard, player_picks, total_picks)
+        player_choice = whats_left(total_picks)
+        players_turn(gameboard, player_picks, total_picks, player_choice)
       end
   end
 
@@ -158,30 +156,32 @@ def tic_tac_toe
     end
   end
 
-
-  
-  #runs each turn, stops if winner is found though , also decides who goes first cpu or computer
   #runs each turn, stops if winner is found though
   def turns(gameboard, computers_picks, player_picks, total_picks)
     #9 total turns
     who_won(player_picks, computers_picks, total_picks, gameboard)
-    players_turn(gameboard, player_picks, total_picks)
+    player_choice = whats_left (total_picks)
+    players_turn(gameboard, player_picks, total_picks, player_choice)
     who_won(player_picks, computers_picks, total_picks, gameboard)
     computers_turn(gameboard, computers_picks, player_picks, total_picks)
     who_won(player_picks, computers_picks, total_picks, gameboard)
-    players_turn(gameboard, player_picks, total_picks)
+    player_choice = whats_left (total_picks)
+    players_turn(gameboard, player_picks, total_picks, player_choice)
     who_won(player_picks, computers_picks, total_picks, gameboard)
     computers_turn(gameboard, computers_picks, player_picks, total_picks)
     who_won(player_picks, computers_picks, total_picks, gameboard)
-    players_turn(gameboard, player_picks, total_picks)
+    player_choice = whats_left (total_picks)
+    players_turn(gameboard, player_picks, total_picks, player_choice)
     who_won(player_picks, computers_picks, total_picks, gameboard)
     computers_turn(gameboard, computers_picks, player_picks, total_picks)
     who_won(player_picks, computers_picks, total_picks, gameboard)
-    players_turn(gameboard, player_picks, total_picks)
+    player_choice = whats_left (total_picks)
+    players_turn(gameboard, player_picks, total_picks, player_choice)
     who_won(player_picks, computers_picks, total_picks, gameboard)
     computers_turn(gameboard, computers_picks, player_picks, total_picks)
     who_won(player_picks, computers_picks, total_picks, gameboard)
-    players_turn(gameboard, player_picks, total_picks)
+    player_choice = whats_left (total_picks)
+    players_turn(gameboard, player_picks, total_picks, player_choice)
     who_won(player_picks, computers_picks, total_picks, gameboard)
   end
   
