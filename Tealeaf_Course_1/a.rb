@@ -1,264 +1,140 @@
-####Tic Tac Toe#####
-#use a array to for each specific spot on the board 1-3 in top 4-6 midd ext
-#if a x or 0 is placed it cant be over written
+###Blackjack####
+#use modules of 4 to figure out if hearts spades ext
+#52 cards in deck
+#if player over 21 then they lose
+#  1 of the dealers card is hidden
+#  dealer stays at 17
+#ace = 1 or 11
+#if 2 same cards, can double down (only on first move)
+#  if user has 21 then automaticly win
 
-# need to have b set to the board being printed on the screen which is b = a and have a being the one mutating the board
-# might have to do the above for asking questions also. so it doesnt do a new line everytime.
+#lets create the cards method
 
-# data should be kept in a hash so a>'' b> '' c = x d> '' f = o ext
+#and the value method for what each card is worth(ignores cards face)
+ # but also needs to understand that ace = 1 and 11 except if you split
 
-#need to create a function for putting the x's and 0's on the board, cant put it into something already occupied
 
-#need to create a function for computers action (prob run random but could craete a cpu ai)
- # computer_picks
- # user_picks
-# all_picks (need to have a array with all pick from both user and computer)
- # computers_turn
-    
-#need to redo board so its into hash
+#if user or computer has ace has to realize it can also be a 1. So if ur over 10 detect if player has ace then if they do, redo calculations and get there new number.
 
-#random to see who goes first
-##################################################
-#Tic Tac Toe Game
+#draw would be random 52 then take that x spot out of the deck, remove it from the deck and then random till all cards are drawn
+
+#when telling them there card remove the _ and replace it with a space
+
+# runs the whole blackjack program
+def blackjack
   
-#Runs the whole game of Tic Tac Toe
-def tic_tac_toe
-    
-  player_picks = []
-  computers_picks = []
-  total_picks = []
-  gameboard = {a: ' ', b: ' ', c: ' ', d: ' ', e: ' ', f: ' ', g: ' ', h: ' ', i: ' '}
+  deck = {Ace_of_Diamonds: 11, Two_of_Diamonds: 2, Three_of_Diamonds: 3, Four_of_Diamonds: 4, Five_of_Diamonds: 5, Six_of_Diamonds: 6, Seven_of_Diamonds: 7, Eight_of_Diamonds: 8, Nine_of_Diamonds: 9, Ten_of_Diamonds: 10, Jack_of_Diamonds: 10, Queen_of_Diamonds: 10, King_of_Diamonds: 10, Ace_of_Spades: 11, Two_of_Spades: 2, Three_of_Spades: 3, Four_of_Spades: 4, Five_of_Spades: 5, Six_of_Spades: 6, Seven_of_Spades: 7, Eight_of_Spades: 8, Nine_of_Spades: 9, Ten_of_Spades: 10, Jack_of_Spades: 10, Queen_of_Spades: 10, King_of_Spades: 10, Ace_of_Diamonds: 11, Two_of_Diamonds: 2, Three_of_Diamonds: 3, Four_of_Diamonds: 4, Five_of_Diamonds: 5, Six_of_Diamonds: 6, Seven_of_Diamonds: 7, Eight_of_Diamonds: 8, Nine_of_Diamonds: 9, Ten_of_Diamonds: 10, Jack_of_Diamonds: 10, Queen_of_Diamonds: 10, King_of_Diamonds: 10, Ace_of_Clubs: 11, Two_of_Clubs: 2, Three_of_Clubs: 3, Four_of_Clubs: 4, Five_of_Clubs: 5, Six_of_Clubs: 6, Seven_of_Clubs: 7, Eight_of_Clubs: 8, Nine_of_Clubs: 9, Ten_of_Clubs: 10, Jack_of_Clubs: 10, Queen_of_Clubs: 10, King_of_Clubs: 10, Ace_of_Hearts: 11, Two_of_Hearts: 2, Three_of_Hearts: 3, Four_of_Hearts: 4, Five_of_Hearts: 5, Six_of_Hearts: 6, Seven_of_Hearts: 7, Eight_of_Hearts: 8, Nine_of_Hearts: 9, Ten_of_Hearts: 10, Jack_of_Hearts: 10, Queen_of_Hearts: 10, King_of_Hearts: 10}
+  deck = deck.to_a
+  players_cards = []
+  computers_cards =[]
+  players_cards_value = 0
+  computers_cards_value = 0
   
-  #Method if the user wants to play again
-  def play_again
-    puts 'Would you like to play Tic-Tac-Toe again? If so say Yes or No'
-    play_again_response = gets.chomp
-    while play_again_response != 'no'
-      if play_again_response.downcase == 'yes'
-        puts 'OK, lets play again!'
-        tic_tac_toe
-        exit
-      elsif play_again_response == 'no'
-        puts 'Ok, Thanks for playing'
-        exit
-      else
-        puts 'You didnt enter Yes or No to the question if you wanted to play again. Please try again.'
-        play_again_response = gets.chomp
-      end
-    end
+  #The Draw, picks a card and removes it from the deck
+  def the_draw(deck)
+    card_random = rand(deck.length)
+    deck[card_random.to_i]
+    deck.delete_at(card_random.to_i)
   end
   
-  # calculates if someone won
-  def who_won(player_picks, computers_picks, total_picks)
-    # checks to see if user won
-    if player_picks.include?(1) and player_picks.include?(4) and player_picks.include?(7) or player_picks.include?(7) and player_picks.include?(5) and player_picks.include?(3) or player_picks.include?(3) and player_picks.include?(6) and player_picks.include?(9) or player_picks.include?(2) and player_picks.include?(5) and player_picks.include?(8) or player_picks.include?(7) and player_picks.include?(8) and player_picks.include?(9) or player_picks.include?(4) and player_picks.include?(5) and player_picks.include?(6) or player_picks.include?(1) and player_picks.include?(2) and player_picks.include?(3) or player_picks.include?(1) and player_picks.include?(5) and player_picks.include?(9)
-     puts 'You WON!!!'
-     play_again
-     exit
-   
-     # checks to see if computer won
-   elsif computers_picks.include?(1) and computers_picks.include?(4) and computers_picks.include?(7) or computers_picks.include?(3) and computers_picks.include?(6) and computers_picks.include?(9) or computers_picks.include?(2) and computers_picks.include?(5) and computers_picks.include?(8) or computers_picks.include?(7) and computers_picks.include?(8) and computers_picks.include?(9) or computers_picks.include?(4) and computers_picks.include?(5) and computers_picks.include?(6) or computers_picks.include?(1) and computers_picks.include?(2) and computers_picks.include?(3) or computers_picks.include?(1) and computers_picks.include?(5) and computers_picks.include?(9) or computers_picks.include?(7) and computers_picks.include?(5) and computers_picks.include?(3)
-     puts 'You Lose'
-      play_again
-     exit
-     
-     #its a tie so ask them to play again
-    elsif total_picks == [1, 2, 3 ,4 ,5 ,6, 7, 8, 9]
-     puts 'You Tied'
-     play_again
-     exit
-    else
-   end
+  #Method to print cards to board
+  def cards_print(cards)
+    print_this = cards.each {|x, y| print x.to_s, ', '}
   end
   
-  # calculates what is left to tell the user what he can pick
-  def whats_left (total_picks)
-    possible_picks = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    picks_left = possible_picks - total_picks
-    print 'You still can pick from' 
-    picks_left.each do |left|
-      print ' '+left.to_s+''
-    end
-    puts '.'
-  end
-  
-  # Gets player move, and makes changes to the board
-  def players_turn(gameboard, player_picks, total_picks)
-    board(gameboard)
-    whats_left (total_picks)
-    player_choice = gets.chomp
-    unless total_picks.include? player_choice.to_i
-      player_picks.push player_choice.to_i
-      total_picks.push player_choice.to_i    
-      if player_choice.to_i == 1
-        gameboard[:a] = 'X'
-      elsif player_choice.to_i == 2
-        gameboard[:b] = 'X'
-      elsif player_choice.to_i == 3
-        gameboard[:c] = 'X'
-      elsif player_choice.to_i == 4
-        gameboard[:d] = 'X'
-      elsif player_choice.to_i == 5
-        gameboard[:e] = 'X'
-      elsif player_choice.to_i == 6
-        gameboard[:f] = 'X'
-      elsif player_choice.to_i == 7
-        gameboard[:g] = 'X'
-      elsif player_choice.to_i == 8
-        gameboard[:h] = 'X'
-      elsif player_choice.to_i == 9
-        gameboard[:i] = 'X'
-      end
-    else 
-      puts 'You picked a spot that wasnt available, try again.'
-      players_turn(gameboard, player_picks, total_picks)
-      exit   
-    end
-  end
-  
-  #the board
-  def board(gameboard)
+  # the playing board
+  def board(computers_cards_value, players_cards_value, players_cards, computers_cards)
     system 'clear'
-
-    puts ' '+gameboard[:a]+' | '+gameboard[:b]+' | '+gameboard[:c]+' '
-    puts '---|---|---'
-    puts ' '+gameboard[:d]+' | '+gameboard[:e]+' | '+gameboard[:f]+' '
-    puts '---|---|---'
-    puts ' '+gameboard[:g]+' | '+gameboard[:h]+' | '+gameboard[:i]+' '
-  end
-  
-  #What move the computer will make
-  def computers_turn(gameboard, computers_picks, player_picks, total_picks)
-    # simple random ai for computers picks
-    computer_picks = rand(9)
-    if computer_picks == 0
-      if total_picks.include? 1
-        computers_turn(gameboard, computers_picks, player_picks, total_picks)
-        exit
-      else
-        gameboard[:a] = 'O'
-        computers_picks.push 1
-        total_picks.push 1
-      end
-    elsif computer_picks == 1
-      if total_picks.include? 2
-        computers_turn(gameboard, computers_picks, player_picks, total_picks)
-        exit
-      else
-        gameboard[:b] = 'O'
-        computers_picks.push 2
-        total_picks.push 2
-      end
-    elsif computer_picks == 2
-      if total_picks.include? 3
-        computers_turn(gameboard, computers_picks, player_picks, total_picks)
-        exit
-      else
-        gameboard[:c] = 'O'
-        computers_picks.push 3
-        total_picks.push 3
-      end
-    elsif computer_picks == 3
-      if total_picks.include? 4
-        computers_turn(gameboard, computers_picks, player_picks, total_picks)
-        exit
-      else
-        gameboard[:d] = 'O'
-        computers_picks.push 4
-        total_picks.push 4
-      end
-    elsif computer_picks == 4
-      if total_picks.include? 5
-        computers_turn(gameboard, computers_picks, player_picks, total_picks)
-        exit
-      else
-        gameboard[:e] = 'O'
-        computers_picks.push 5
-        total_picks.push 5
-      end
-    elsif computer_picks == 5
-      if total_picks.include? 6
-        computers_turn(gameboard, computers_picks, player_picks, total_picks)
-        exit
-      else
-        gameboard[:f] = 'O'
-        computers_picks.push 6
-        total_picks.push 6
-      end
-    elsif computer_picks == 6
-      if total_picks.include? 7
-        computers_turn(gameboard, computers_picks, player_picks, total_picks)
-        exit
-      else
-        gameboard[:g] = 'O'
-        computers_picks.push 7
-        total_picks.push 7
-      end
-    elsif computer_picks == 7
-      if total_picks.include? 8
-        computers_turn(gameboard, computers_picks, player_picks, total_picks)
-        exit
-      else
-        gameboard[:h] = 'O'
-        computers_picks.push 8
-        total_picks.push 8
-      end
-    elsif computer_picks == 8
-      if total_picks.include? 9
-        computers_turn(gameboard, computers_picks, player_picks, total_picks)
-        exit
-      else
-        gameboard[:i] = 'O'
-        computers_picks.push 9 
-        total_picks.push 9
-      end
-    end
-  end
-
-  
-  #runs each turn, stops if winner is found though
-  def turns(gameboard, computers_picks, player_picks, total_picks)
-  #9 total turns
-  players_turn(gameboard, player_picks, total_picks)
-  who_won(player_picks, computers_picks, total_picks)
-  computers_turn(gameboard, computers_picks, player_picks, total_picks)
-  who_won(player_picks, computers_picks, total_picks)
-  players_turn(gameboard, player_picks, total_picks)
-  who_won(player_picks, computers_picks, total_picks)
-  computers_turn(gameboard, computers_picks, player_picks, total_picks)
-  who_won(player_picks, computers_picks, total_picks)
-  players_turn(gameboard, player_picks, total_picks)
-  who_won(player_picks, computers_picks, total_picks)
-  computers_turn(gameboard, computers_picks, player_picks, total_picks)
-  who_won(player_picks, computers_picks, total_picks)
-  players_turn(gameboard, player_picks, total_picks)
-  who_won(player_picks, computers_picks, total_picks)
-  computers_turn(gameboard, computers_picks, player_picks, total_picks)
-  who_won(player_picks, computers_picks, total_picks)
-  players_turn(gameboard, player_picks, total_picks)
-  who_won(player_picks, computers_picks, total_picks)
-end
-  
-  turns(gameboard, computers_picks, player_picks, total_picks)
-end
-
-puts 'Welcome to Tic-Tac-Toe. '
-#write out more instruction once we develop the game
-tic_tac_toe
-
-
-
-
-# make section for players turn
-# fix the board to hash use gameboard references
-# gameboard and chat doesnt move when entering numbers. (might need to look at how they did that) might be not using puts which pushes to a new line?
-# fix def turns
-# add description for each method
-#need to add board move to player and computers choice
-
-# if no winner decieded we need to decide if ...
-
-  # easier way then long if else statement for both computer and players turn for the telling it what part of gameboard to go to?
-  
-
+    linewidth = 100
+    #add the cards
+    puts (('BlackJack').ljust(linewidth / 3)) + (('Computers Cards').center(linewidth / 3)) + (('Computers Cards Value = '+computers_cards_value.to_s+'').rjust(linewidth / 3))
+    puts ((''+computers_cards.to_s+'').center(linewidth))
+    puts ''
+    print cards_print(players_cards)
+    puts '' 
+    puts (('').ljust(linewidth / 3)) + (('Players Cards').center(linewidth / 3)) + (('Players Cards Value = '+players_cards_value.to_s+'').rjust(linewidth / 3)) 
     
+  end
+
+  #dealing the opening hands
+  def opening_hand(players_cards, computers_cards, deck)
+    players_cards.push (the_draw(deck))
+    computers_cards.push (the_draw(deck))
+    players_cards.push (the_draw(deck))
+    computers_cards.push (the_draw(deck))
+  end
+  
+  #gets card value for player or computer
+  def card_value(cards_value, cards)
+    players_cards_length = cards.length
+    players_cards_info = cards[0 .. cards.length]
+    cards.each {|y, x| cards_value = cards_value + x }
+    return cards_value
+  end
+  
+
+  puts 'hey'
+  cards_print(players_cards)
+  puts ''rb
+  # the execution of the method.
+  opening_hand(players_cards, computers_cards, deck)
+  players_cards_value = card_value(players_cards_value, players_cards)
+  computers_cards_value = card_value(computers_cards_value, computers_cards)
+  board(computers_cards_value, players_cards_value, players_cards, computers_cards)
+  
+  puts 'hey'
+  cards_print(players_cards)
+  puts ''
+
+end
+blackjack
+
+# need to fix the board printing players cards using gsub to get rid of _ for spaces
+# currently the players cards arent pritning right even with the created method print this...
+
+#need to add the hit stay method (players actions)
+
+#need to add computers actions
+
+#need to decide winner on draw player or computer have 21? if not keep playing
+
+#need to figure out winner
+
+# need to add play again?
+
+#myString.gsub("_", " ")
+
+#old things i was working on
+# who is currently going
+  def turn
+    while players_cards_value.to_i <= 21
+      we ask him to hit or stay
+      if hit
+        draw another card
+        elsif stay
+      end loop soo comput goes
+    end
+      then run computers turn   
+  end
+      
+        #updates the board with new info
+  def board_update()
+    get the card value for both computer and player
+      write players cards and computers cards
+  end
+    
+        
+    ###### DONT NEED, USED .each method isntead ########### 
+    # gets the value out of the array for each card, ignoring the name
+    while players_cards_length.to_i != 0
+      card_get_value = players_cards_info[0]
+      players_all_cards_value = players_all_cards_value.push(card_get_value.last)
+      players_cards_length = players_cards_length.to_i - 1
+    end
+
+    #adds up the value
+    while players_all_cards_value.length != 0
+      card_test = players_all_cards_value[0]
+      players_cards_value = players_cards_value + (card_test.to_i)
+      players_all_cards_value.delete_at(0)
+    end
