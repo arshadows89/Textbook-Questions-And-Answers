@@ -4,8 +4,10 @@ def blackjack
   deck = {Ace_of_Diamonds: 11, Two_of_Diamonds: 2, Three_of_Diamonds: 3, Four_of_Diamonds: 4, Five_of_Diamonds: 5, Six_of_Diamonds: 6, Seven_of_Diamonds: 7, Eight_of_Diamonds: 8, Nine_of_Diamonds: 9, Ten_of_Diamonds: 10, Jack_of_Diamonds: 10, Queen_of_Diamonds: 10, King_of_Diamonds: 10, Ace_of_Spades: 11, Two_of_Spades: 2, Three_of_Spades: 3, Four_of_Spades: 4, Five_of_Spades: 5, Six_of_Spades: 6, Seven_of_Spades: 7, Eight_of_Spades: 8, Nine_of_Spades: 9, Ten_of_Spades: 10, Jack_of_Spades: 10, Queen_of_Spades: 10, King_of_Spades: 10, Ace_of_Diamonds: 11, Two_of_Diamonds: 2, Three_of_Diamonds: 3, Four_of_Diamonds: 4, Five_of_Diamonds: 5, Six_of_Diamonds: 6, Seven_of_Diamonds: 7, Eight_of_Diamonds: 8, Nine_of_Diamonds: 9, Ten_of_Diamonds: 10, Jack_of_Diamonds: 10, Queen_of_Diamonds: 10, King_of_Diamonds: 10, Ace_of_Clubs: 11, Two_of_Clubs: 2, Three_of_Clubs: 3, Four_of_Clubs: 4, Five_of_Clubs: 5, Six_of_Clubs: 6, Seven_of_Clubs: 7, Eight_of_Clubs: 8, Nine_of_Clubs: 9, Ten_of_Clubs: 10, Jack_of_Clubs: 10, Queen_of_Clubs: 10, King_of_Clubs: 10, Ace_of_Hearts: 11, Two_of_Hearts: 2, Three_of_Hearts: 3, Four_of_Hearts: 4, Five_of_Hearts: 5, Six_of_Hearts: 6, Seven_of_Hearts: 7, Eight_of_Hearts: 8, Nine_of_Hearts: 9, Ten_of_Hearts: 10, Jack_of_Hearts: 10, Queen_of_Hearts: 10, King_of_Hearts: 10}
   deck = deck.to_a
   players_cards = []
+  players_cards_two = []
   computers_cards =[]
   players_cards_value = 0
+  players_cards_two_value = 0
   computers_cards_value = 0
   
   #The Draw, picks a card and removes it from the deck
@@ -140,16 +142,16 @@ def blackjack
   
   #Deciding winner
   def who_won?(players_cards_value, computers_cards_value)
-    if players_cards_value > 21
-      puts "You went over 21. You Lose"
+    if players_cards_value <= 21 and players_cards_value > computers_cards_value
+      puts 'You win!'
+      play_again
+      exit
+    elsif  players_cards_two_value <= 21 and players_cards_two_value > computers_cards_value
+      puts 'You win!'
       play_again
       exit
     elsif computers_cards_value > 21
       puts "The house went over 21. You Win!"
-      play_again
-      exit
-    elsif players_cards_value <= 21 and players_cards_value > computers_cards_value
-      puts 'You win!'
       play_again
       exit
     else
@@ -160,8 +162,12 @@ def blackjack
   end
     
   #Checking if blackjack happened
-  def blackjack?(players_cards_value, computers_cards_value)
+  def blackjack?(players_cards_value, computers_cards_value, players_cards_two_value)
     if players_cards_value == 21
+      puts 'BlackJack! You Win!'
+      play_again
+      exit
+    elsif players_cards_two_value == 21
       puts 'BlackJack! You Win!'
       play_again
       exit
@@ -195,7 +201,7 @@ def blackjack
   opening_hand(players_cards, computers_cards, deck)
   players_cards_value = card_value(players_cards_value, players_cards)
   board(computers_cards_value, players_cards_value, players_cards, computers_cards)
-  blackjack?(players_cards_value, computers_cards_value)
+  blackjack?(players_cards_value, computers_cards_value, players_cards_two_value)
   hidden_computer_card = computers_cards[0]
   computers_cards.delete_at(0)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
@@ -220,9 +226,41 @@ blackjack
 ###Blackjack####
 
 
+#need to put this at the start of when hands are dealt (has to be before board...)
+#double down (only for player not the house)
+players_cards = {Ace_of_Diamonds: 11, Two_of_Diamonds: 11}
+players_cards = players_cards.to_a
 
-#double down
-#if start of turn?
+def double_down(players_cards)
+  double_down_value = []
+  players_cards.each {|x, y| double_down_value.push(y)}
+  if double_down_value[0] == double_down_value[1]
+    puts 'Yo have matching cards. Do you want to double down? Yes or No?'
+    double_down_reply = gets.chomp
+    while double_down_reply.downcase != 'no'
+      if double_down_reply.downcase == 'yes'
+      players_cards = double_down_value[0]
+      players_cards_two = double_down_value[1]
+      players_cards.push (the_draw(deck))
+      players_cards_two.push (the_draw(deck))
+      # how to show on board...
+        #players_cards_two value update
+      #if player_cards_two != nil then we have to accomadate that
+        # players action busted cant auto end without checking if there is player action_two
+      # and we run the player_actions on both thing
+        #if player_action_value != nil then we tell player action to run on player action and player action 2
+        # need to create a method if both are busted to see if player loses, if there is no player_value_two then we run it once to see if its busted
+      elsif double_down_reply.downcase == 'no'
+        exit
+      else
+        puts 'You didn\'t enter Yes or No to the question, do you want to double down? Please respond with Yes or No'
+        double_down_reply = gets.chomp
+      end
+    end
+  end
+end
+  
+
 #if so do you have 1 cards with same value? if so
 #if card_value[0] = card_value[1]
 #then double down...
@@ -231,3 +269,7 @@ blackjack
 
 
 #if 2 same cards, can double down (only on first move)
+
+
+####
+#the ace thing doesnt work...
