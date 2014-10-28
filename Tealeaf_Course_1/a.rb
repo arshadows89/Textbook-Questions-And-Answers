@@ -20,11 +20,10 @@ def blackjack
     print_this = cards.each {|x, y| print x.to_s, ', '}
     end
   
-    # the playing board we see with first of the house cards hidden
+  #The playing board we see with first of the house cards hidden
   def board(computers_cards_value, players_cards_value, players_cards, computers_cards)
     system 'clear'
     linewidth = 100
-
     #add the cards
     puts (('BlackJack').ljust(linewidth / 3)) + (('Computers Cards').center(linewidth / 3)) + (('Computers Cards Value = '+computers_cards_value.to_s+'').rjust(linewidth / 3))
     print ('').center(linewidth / 3)
@@ -39,11 +38,10 @@ def blackjack
     puts (('').ljust(linewidth / 3)) + (('Players Cards').center(linewidth / 3)) + (('Players Cards Value = '+players_cards_value.to_s+'').rjust(linewidth / 3)) 
     end
   
-    #reveals houses hidden card
+  #Reveals houses hidden card
   def board_show_all(computers_cards_value, players_cards_value, players_cards, computers_cards)
     system 'clear'
     linewidth = 100
-
     #add the cards
     puts (('BlackJack').ljust(linewidth / 3)) + (('Computers Cards').center(linewidth / 3)) + (('Computers Cards Value = '+computers_cards_value.to_s+'').rjust(linewidth / 3))
     print ('').center(linewidth / 3)
@@ -57,7 +55,7 @@ def blackjack
     puts (('').ljust(linewidth / 3)) + (('Players Cards').center(linewidth / 3)) + (('Players Cards Value = '+players_cards_value.to_s+'').rjust(linewidth / 3)) 
     end
 
-  #dealing the opening hands
+  #Dealing the opening hand
   def opening_hand(players_cards, computers_cards, deck)
     players_cards.push (the_draw(deck))
     computers_cards.push (the_draw(deck))
@@ -65,7 +63,7 @@ def blackjack
     computers_cards.push (the_draw(deck))
   end
   
-  # checks to see if said deck has a ace or 11
+  #Checks to see if said deck has a ace or 11
   def card_elleven_or_one(cards, card_spot)
     new_players_cards = cards.collect{|x| x}
     old_cards = new_players_cards[card_spot]
@@ -75,7 +73,7 @@ def blackjack
     new_cards.push(1)
   end
 
-  # saves players or computers card deck aces to ones if they have it
+  #Saves players or computers card deck aces to ones if they have it
   def card_value_one(cards)
     card_spot = cards.index{ |x, y| y == 11 }
     card_elleven_or_one_save = card_elleven_or_one(ards, card_spot)
@@ -83,7 +81,7 @@ def blackjack
     cards = cards.push(card_elleven_or_one_save)
   end
   
-  #gets card value for player or computer
+  #Gets card value for player or computer
   def card_value(cards_value, cards)
     cards_value = 0
     players_cards_length = cards.length
@@ -92,14 +90,13 @@ def blackjack
     return cards_value
   end
   
-  # Asking the player to hit or stay
+  #Asking the player to hit or stay
   def players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards)
     puts 'You have '+players_cards_value.to_s+' right now. Would you like to hit or stay? (type hit or stay to perform said action)'
     players_actions_reply = gets.chomp
     while players_actions_reply.downcase != 'stay'
       #if reply is 'stay' then program ends
-      if players_actions_reply.downcase == 'stay'
-        
+      if players_actions_reply.downcase == 'stay' 
         #elsif reply is 'hit' then program will loop and update board
       elsif players_actions_reply.downcase == 'hit'
         players_cards.push (the_draw(deck))
@@ -127,7 +124,7 @@ def blackjack
     end
   end
   
-  #computers action, (stays at anything at 17 and above)
+  #Computers action, (stays at anything at 17 and above)
   def computers_actions(computers_cards_value, computers_cards, deck)
     while computers_cards_value.to_i < 17
       computers_cards.push (the_draw(deck))
@@ -141,7 +138,7 @@ def blackjack
     return computers_cards_value
   end
   
-  # deciding winner
+  #Deciding winner
   def who_won?(players_cards_value, computers_cards_value)
     if players_cards_value > 21
       puts "You went over 21. You Lose"
@@ -162,7 +159,7 @@ def blackjack
     end
   end
     
-  # Checking if blackjack happened
+  #Checking if blackjack happened
   def blackjack?(players_cards_value, computers_cards_value)
     if players_cards_value == 21
       puts 'BlackJack! You Win!'
@@ -194,10 +191,9 @@ def blackjack
     end
   end
 
-  # the execution of the method.
+  #The execution of the method.
   opening_hand(players_cards, computers_cards, deck)
   players_cards_value = card_value(players_cards_value, players_cards)
-  #
   board(computers_cards_value, players_cards_value, players_cards, computers_cards)
   blackjack?(players_cards_value, computers_cards_value)
   hidden_computer_card = computers_cards[0]
@@ -225,8 +221,6 @@ blackjack
 
 
 
-
-
 #double down
 #if start of turn?
 #if so do you have 1 cards with same value? if so
@@ -234,8 +228,6 @@ blackjack
 #then double down...
 #dealer does not double down
 #need to figure out how it can double down
-
-
 
 
 #if 2 same cards, can double down (only on first move)
