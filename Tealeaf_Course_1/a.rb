@@ -1,25 +1,3 @@
-###Blackjack####
-#use modules of 4 to figure out if hearts spades ext
-#52 cards in deck
-#if player over 21 then they lose
-#  1 of the dealers card is hidden
-#  dealer stays at 17
-#ace = 1 or 11
-#if 2 same cards, can double down (only on first move)
-#  if user has 21 then automaticly win
-
-#lets create the cards method
-
-#and the value method for what each card is worth(ignores cards face)
- # but also needs to understand that ace = 1 and 11 except if you split
-
-
-#if user or computer has ace has to realize it can also be a 1. So if ur over 10 detect if player has ace then if they do, redo calculations and get there new number.
-
-#draw would be random 52 then take that x spot out of the deck, remove it from the deck and then random till all cards are drawn
-
-#when telling them there card remove the _ and replace it with a space
-
 # runs the whole blackjack program
 def blackjack
   
@@ -40,21 +18,44 @@ def blackjack
   #Method to print cards to board
   def cards_print(cards)
     print_this = cards.each {|x, y| print x.to_s, ', '}
-  end
+    end
   
-  # the playing board
+    # the playing board we see with first of the house cards hidden
   def board(computers_cards_value, players_cards_value, players_cards, computers_cards)
     system 'clear'
     linewidth = 100
+
     #add the cards
     puts (('BlackJack').ljust(linewidth / 3)) + (('Computers Cards').center(linewidth / 3)) + (('Computers Cards Value = '+computers_cards_value.to_s+'').rjust(linewidth / 3))
-    puts ((''+computers_cards.to_s+'').center(linewidth))
+    print ('').center(linewidth / 3)
+    cards_print(computers_cards)
+    print "Hidden Card"
     puts ''
-    print cards_print(players_cards)
+    puts ''
+    puts ''
+    print ('').center(linewidth / 3)
+    cards_print(players_cards)
     puts '' 
     puts (('').ljust(linewidth / 3)) + (('Players Cards').center(linewidth / 3)) + (('Players Cards Value = '+players_cards_value.to_s+'').rjust(linewidth / 3)) 
-    
-  end
+    end
+  
+    #reveals houses hidden card
+  def board_show_all(computers_cards_value, players_cards_value, players_cards, computers_cards)
+    system 'clear'
+    linewidth = 100
+
+    #add the cards
+    puts (('BlackJack').ljust(linewidth / 3)) + (('Computers Cards').center(linewidth / 3)) + (('Computers Cards Value = '+computers_cards_value.to_s+'').rjust(linewidth / 3))
+    print ('').center(linewidth / 3)
+    cards_print(computers_cards)
+    puts ''
+    puts ''
+    puts ''
+    print ('').center(linewidth / 3)
+    cards_print(players_cards)
+    puts '' 
+    puts (('').ljust(linewidth / 3)) + (('Players Cards').center(linewidth / 3)) + (('Players Cards Value = '+players_cards_value.to_s+'').rjust(linewidth / 3)) 
+    end
 
   #dealing the opening hands
   def opening_hand(players_cards, computers_cards, deck)
@@ -64,77 +65,177 @@ def blackjack
     computers_cards.push (the_draw(deck))
   end
   
+  # checks to see if said deck has a ace or 11
+  def card_elleven_or_one(cards, card_spot)
+    new_players_cards = cards.collect{|x| x}
+    old_cards = new_players_cards[card_spot]
+    old_cards = old_cards.delete_at(0)
+    new_cards = []
+    new_cards.push(old_cards)
+    new_cards.push(1)
+  end
+
+  # saves players or computers card deck aces to ones if they have it
+  def card_value_one(cards)
+    card_spot = cards.index{ |x, y| y == 11 }
+    card_elleven_or_one_save = card_elleven_or_one(ards, card_spot)
+    cards.delete_at(card_spot)
+    cards = cards.push(card_elleven_or_one_save)
+  end
+  
   #gets card value for player or computer
   def card_value(cards_value, cards)
+    cards_value = 0
     players_cards_length = cards.length
     players_cards_info = cards[0 .. cards.length]
     cards.each {|y, x| cards_value = cards_value + x }
     return cards_value
   end
   
+  # Asking the player to hit or stay
+  def players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards)
+    puts 'You have '+players_cards_value.to_s+' right now. Would you like to hit or stay? (type hit or stay to perform said action)'
+    players_actions_reply = gets.chomp
+    while players_actions_reply.downcase != 'stay'
+      #if reply is 'stay' then program ends
+      if players_actions_reply.downcase == 'stay'
+        
+        #elsif reply is 'hit' then program will loop and update board
+      elsif players_actions_reply.downcase == 'hit'
+        players_cards.push (the_draw(deck))
+        players_cards_value = card_value(players_cards_value, players_cards)
+        board(computers_cards_value, players_cards_value, players_cards, computers_cards)
+        if players_cards_value >= 21
+          if players_cards.index{ |x, y| y == 11 } == true
+            card_value_one(players_cards)
+            players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards)
+            exit
+          else
+            puts 'Busted. You went over 21. You Lose'
+            play_again
+            exit
+          end
+        else
+          players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards)
+          exit
+        end
+        #they didn't enter hit or stay
+      else
+         puts 'You didn\'t enter hit or stay. Please try again.'
+        players_actions_reply = gets.chomp
+      end
+    end
+  end
+  
+  #computers action, (stays at anything at 17 and above)
+  def computers_actions(computers_cards_value, computers_cards, deck)
+    while computers_cards_value.to_i < 17
+      computers_cards.push (the_draw(deck))
+      computers_cards_value = card_value(computers_cards_value, computers_cards)
+      if computers_cards_value.to_i > 21 and computers_cards.index{ |x, y| y == 11 } == true
+        card_value_one(computers_cards)
+        computers_actions(computers_cards_value, computers_cards, deck)
+        exit
+      end
+    end
+    return computers_cards_value
+  end
+  
+  # deciding winner
+  def who_won?(players_cards_value, computers_cards_value)
+    if players_cards_value > 21
+      puts "You went over 21. You Lose"
+      play_again
+      exit
+    elsif computers_cards_value > 21
+      puts "The house went over 21. You Win!"
+      play_again
+      exit
+    elsif players_cards_value <= 21 and players_cards_value > computers_cards_value
+      puts 'You win!'
+      play_again
+      exit
+    else
+      puts 'The house Wins!'
+      play_again
+      exit
+    end
+  end
+    
+  # Checking if blackjack happened
+  def blackjack?(players_cards_value, computers_cards_value)
+    if players_cards_value == 21
+      puts 'BlackJack! You Win!'
+      play_again
+      exit
+    elsif computers_cards_value == 21
+      puts 'Blackjack! House Wins'
+      play_again
+      exit
+    end
+  end
+  
+  #Method if the user wants to play again
+  def play_again
+    puts 'Would you like to play another hand of BlackJack? If so say Yes or No'
+    play_again_response = gets.chomp
+    while play_again_response != 'no'
+      if play_again_response.downcase == 'yes'
+        puts 'OK, lets play again!'
+        blackjack
+        exit
+      elsif play_again_response == 'no'
+        puts 'Ok, Thanks for playing'
+        exit
+      else
+        puts 'You didn\'t enter Yes or No to the question if you wanted to play again. Please try again.'
+        play_again_response = gets.chomp
+      end
+    end
+  end
 
-  puts 'hey'
-  cards_print(players_cards)
-  puts ''rb
   # the execution of the method.
   opening_hand(players_cards, computers_cards, deck)
   players_cards_value = card_value(players_cards_value, players_cards)
+  #
+  board(computers_cards_value, players_cards_value, players_cards, computers_cards)
+  blackjack?(players_cards_value, computers_cards_value)
+  hidden_computer_card = computers_cards[0]
+  computers_cards.delete_at(0)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
   board(computers_cards_value, players_cards_value, players_cards, computers_cards)
-  
-  puts 'hey'
-  cards_print(players_cards)
-  puts ''
+  blackjack?(players_cards_value, computers_cards_value)
+  players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards)
+  computers_cards = computers_cards.push(hidden_computer_card)
+  computers_actions(computers_cards_value, computers_cards, deck)
+  computers_cards_value = card_value(computers_cards_value, computers_cards)
+  board_show_all(computers_cards_value, players_cards_value, players_cards, computers_cards)
+  who_won?(players_cards_value, computers_cards_value)
 
 end
 blackjack
 
-# need to fix the board printing players cards using gsub to get rid of _ for spaces
-# currently the players cards arent pritning right even with the created method print this...
+# need to fix the board printing players cards using gsub to get rid of _ for spaces but its not working due to array? (.gsub("_", " ") method isnt working on the array.)
 
-#need to add the hit stay method (players actions)
+#also the card names are not centering cause its a array?
 
-#need to add computers actions
+#######################################
 
-#need to decide winner on draw player or computer have 21? if not keep playing
+###Blackjack####
 
-#need to figure out winner
 
-# need to add play again?
 
-#myString.gsub("_", " ")
 
-#old things i was working on
-# who is currently going
-  def turn
-    while players_cards_value.to_i <= 21
-      we ask him to hit or stay
-      if hit
-        draw another card
-        elsif stay
-      end loop soo comput goes
-    end
-      then run computers turn   
-  end
-      
-        #updates the board with new info
-  def board_update()
-    get the card value for both computer and player
-      write players cards and computers cards
-  end
-    
-        
-    ###### DONT NEED, USED .each method isntead ########### 
-    # gets the value out of the array for each card, ignoring the name
-    while players_cards_length.to_i != 0
-      card_get_value = players_cards_info[0]
-      players_all_cards_value = players_all_cards_value.push(card_get_value.last)
-      players_cards_length = players_cards_length.to_i - 1
-    end
 
-    #adds up the value
-    while players_all_cards_value.length != 0
-      card_test = players_all_cards_value[0]
-      players_cards_value = players_cards_value + (card_test.to_i)
-      players_all_cards_value.delete_at(0)
-    end
+#double down
+#if start of turn?
+#if so do you have 1 cards with same value? if so
+#if card_value[0] = card_value[1]
+#then double down...
+#dealer does not double down
+#need to figure out how it can double down
+
+
+
+
+#if 2 same cards, can double down (only on first move)
