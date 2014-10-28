@@ -23,7 +23,7 @@ def blackjack
     end
   
   #The playing board we see with first of the house cards hidden
-  def board(computers_cards_value, players_cards_value, players_cards, computers_cards)
+  def board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
     system 'clear'
     linewidth = 100
     #add the cards
@@ -34,6 +34,11 @@ def blackjack
     puts ''
     puts ''
     puts ''
+    if players_cards_two_value >0
+      puts (('').ljust(linewidth / 3)) + (('Players Double Down Cards').center(linewidth / 3)) + (('Players Cards Value = '+players_cards_two_value.to_s+'').rjust(linewidth / 3)) 
+      print ('').center(linewidth / 3)
+      cards_print(players_cards_two)
+    end
     print ('').center(linewidth / 3)
     cards_print(players_cards)
     puts '' 
@@ -41,7 +46,7 @@ def blackjack
     end
   
   #Reveals houses hidden card
-  def board_show_all(computers_cards_value, players_cards_value, players_cards, computers_cards)
+  def board_show_all(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
     system 'clear'
     linewidth = 100
     #add the cards
@@ -51,6 +56,11 @@ def blackjack
     puts ''
     puts ''
     puts ''
+    if players_cards_two_value >0
+      puts (('').ljust(linewidth / 3)) + (('Players Double Down Cards').center(linewidth / 3)) + (('Players Cards Value = '+players_cards_two_value.to_s+'').rjust(linewidth / 3)) 
+      print ('').center(linewidth / 3)
+      cards_print(players_cards_two)
+    end
     print ('').center(linewidth / 3)
     cards_print(players_cards)
     puts '' 
@@ -93,7 +103,7 @@ def blackjack
   end
   
   #Asking the player to hit or stay
-  def players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards)
+  def players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
     puts 'You have '+players_cards_value.to_s+' right now. Would you like to hit or stay? (type hit or stay to perform said action)'
     players_actions_reply = gets.chomp
     while players_actions_reply.downcase != 'stay'
@@ -103,19 +113,24 @@ def blackjack
       elsif players_actions_reply.downcase == 'hit'
         players_cards.push (the_draw(deck))
         players_cards_value = card_value(players_cards_value, players_cards)
-        board(computers_cards_value, players_cards_value, players_cards, computers_cards)
+        board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
         if players_cards_value >= 21
           if players_cards.index{ |x, y| y == 11 } == true
             card_value_one(players_cards)
-            players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards)
+            players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
             exit
           else
-            puts 'Busted. You went over 21. You Lose'
-            play_again
-            exit
+            if players_cards_two_value == 0
+              puts 'Busted. You went over 21. You Lose'
+              play_again
+              exit
+            else
+              players_actions(players_cards_two_value, players_cards_two, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
+              exit
+            end
           end
         else
-          players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards)
+          players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
           exit
         end
         #they didn't enter hit or stay
@@ -138,6 +153,29 @@ def blackjack
       end
     end
     return computers_cards_value
+  end
+    
+  # Checks to see if the player wants to double down or not
+  def double_down(players_cards)
+    double_down_value = []
+    players_cards.each {|x, y| double_down_value.push(y)}
+    if double_down_value[0] == double_down_value[1]
+      puts 'Yo have matching cards. Do you want to double down? Yes or No?'
+      double_down_reply = gets.chomp
+      while double_down_reply.downcase != 'no'
+        if double_down_reply.downcase == 'yes'
+        players_cards = double_down_value[0]
+        players_cards_two = double_down_value[1]
+        players_cards.push (the_draw(deck))
+        players_cards_two.push (the_draw(deck))
+        elsif double_down_reply.downcase == 'no'
+          exit
+        else
+          puts 'You didn\'t enter Yes or No to the question, do you want to double down? Please respond with Yes or No'
+          double_down_reply = gets.chomp
+        end
+      end
+    end
   end
   
   #Deciding winner
@@ -200,18 +238,19 @@ def blackjack
   #The execution of the method.
   opening_hand(players_cards, computers_cards, deck)
   players_cards_value = card_value(players_cards_value, players_cards)
-  board(computers_cards_value, players_cards_value, players_cards, computers_cards)
+  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
   blackjack?(players_cards_value, computers_cards_value, players_cards_two_value)
   hidden_computer_card = computers_cards[0]
   computers_cards.delete_at(0)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
-  board(computers_cards_value, players_cards_value, players_cards, computers_cards)
-  blackjack?(players_cards_value, computers_cards_value)
-  players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards)
+  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+  blackjack?(players_cards_value, computers_cards_value, players_cards_two_value)
+  double_down(players_cards)
+  players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
   computers_cards = computers_cards.push(hidden_computer_card)
   computers_actions(computers_cards_value, computers_cards, deck)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
-  board_show_all(computers_cards_value, players_cards_value, players_cards, computers_cards)
+  board_show_all(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
   who_won?(players_cards_value, computers_cards_value)
 
 end
@@ -223,53 +262,9 @@ blackjack
 
 #######################################
 
-###Blackjack####
 
-
-#need to put this at the start of when hands are dealt (has to be before board...)
-#double down (only for player not the house)
-players_cards = {Ace_of_Diamonds: 11, Two_of_Diamonds: 11}
-players_cards = players_cards.to_a
-
-def double_down(players_cards)
-  double_down_value = []
-  players_cards.each {|x, y| double_down_value.push(y)}
-  if double_down_value[0] == double_down_value[1]
-    puts 'Yo have matching cards. Do you want to double down? Yes or No?'
-    double_down_reply = gets.chomp
-    while double_down_reply.downcase != 'no'
-      if double_down_reply.downcase == 'yes'
-      players_cards = double_down_value[0]
-      players_cards_two = double_down_value[1]
-      players_cards.push (the_draw(deck))
-      players_cards_two.push (the_draw(deck))
-      # how to show on board...
-        #players_cards_two value update
-      #if player_cards_two != nil then we have to accomadate that
-        # players action busted cant auto end without checking if there is player action_two
-      # and we run the player_actions on both thing
-        #if player_action_value != nil then we tell player action to run on player action and player action 2
-        # need to create a method if both are busted to see if player loses, if there is no player_value_two then we run it once to see if its busted
-      elsif double_down_reply.downcase == 'no'
-        exit
-      else
-        puts 'You didn\'t enter Yes or No to the question, do you want to double down? Please respond with Yes or No'
-        double_down_reply = gets.chomp
-      end
-    end
-  end
-end
-  
-
-#if so do you have 1 cards with same value? if so
-#if card_value[0] = card_value[1]
-#then double down...
-#dealer does not double down
-#need to figure out how it can double down
-
-
-#if 2 same cards, can double down (only on first move)
-
-
-####
 #the ace thing doesnt work...
+
+#after multiple hits, stay ends program
+
+#check 187 who win, players_cards_two_value doesnt udnerstand
