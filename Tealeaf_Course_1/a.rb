@@ -156,7 +156,7 @@ def blackjack
   end
     
   # Checks to see if the player wants to double down or not
-  def double_down(players_cards)
+  def double_down(players_cards, deck)
     double_down_value = []
     players_cards.each {|x, y| double_down_value.push(y)}
     if double_down_value[0] == double_down_value[1]
@@ -179,7 +179,7 @@ def blackjack
   end
   
   #Deciding winner
-  def who_won?(players_cards_value, computers_cards_value)
+  def who_won?(players_cards_value, computers_cards_value, players_cards_two_value)
     if players_cards_value <= 21 and players_cards_value > computers_cards_value
       puts 'You win!'
       play_again
@@ -251,7 +251,7 @@ def blackjack
   computers_actions(computers_cards_value, computers_cards, deck)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
   board_show_all(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
-  who_won?(players_cards_value, computers_cards_value)
+  who_won?(players_cards_value, computers_cards_value, players_cards_two_value)
 
 end
 blackjack
@@ -268,3 +268,7 @@ blackjack
 #after multiple hits, stay ends program
 
 #check 187 who win, players_cards_two_value doesnt udnerstand
+
+#house hit on queen and jack???
+
+# my double down detection might thinkg 10 queen jack king all are same
