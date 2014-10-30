@@ -109,7 +109,6 @@ def blackjack
     players_actions_reply = gets.chomp
     while players_actions_reply.downcase != 'stay'
       #if reply is 'stay' then program ends
-      binding.pry
       if players_actions_reply.downcase == 'hit'
         players_cards.push (the_draw(deck))
         players_cards_value = card_value(players_cards_value, players_cards)
@@ -139,7 +138,6 @@ def blackjack
         players_actions_reply = gets.chomp
       end
     end
-    binding.pry
   end
   
   #Computers action, (stays at anything at 17 and above)
@@ -290,4 +288,6 @@ blackjack
 
 # i busted by hitting 21???
 
-#a.rb:174:in `double_down': undefined method `push' for 11:Fixnum (NoMethodError)        
+#a.rb:174:in `double_down': undefined method `push' for 11:Fixnum (NoMethodError)    
+
+# combine the two boards together, by adding a if stated if computers_Cards value.length == 2 then run the hidden card, else everythign is normal
