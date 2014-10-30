@@ -113,7 +113,7 @@ def blackjack
         players_cards.push (the_draw(deck))
         players_cards_value = card_value(players_cards_value, players_cards)
         board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
-        if players_cards_value >= 21
+        if players_cards_value > 21
           if players_cards.index{ |x, y| y == 11 } == true
             card_value_one(players_cards)
             players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
@@ -124,14 +124,13 @@ def blackjack
               play_again
               exit
             else
-              #could be bellow here
               players_actions(players_cards_two_value, players_cards_two, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
               exit 
             end
           end
         else
+          players_actions_reply = 'stay'
           players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
-          exit
         end
       else
          puts 'You didn\'t enter hit or stay. Please try again.'
@@ -250,6 +249,7 @@ def blackjack
   blackjack?(players_cards_value, computers_cards_value, players_cards_two_value)
   double_down(players_cards, deck)
   players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
+  players_cards_value = card_value(players_cards_value, players_cards)
   computers_cards = computers_cards.push(hidden_computer_card)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
   computers_actions(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value)
@@ -266,25 +266,13 @@ blackjack
 
 #######################################
 
-
 #the ace thing doesnt work...
-
-#after multiple hits, stay ends program
-
-
-#house hit on queen and jack???
 
 # my double down detection might thinkg 10 queen jack king all are same
 
 # when i win with blackjack it shows this BlackJack                                 Computers Cards                 Computers Cards Value = 0                                                                                         Four_of_Diamonds, Three_of_Spades, Hidden Card  
 
-# if house has a greater value then you when you stay it wont hit
-
-
 #a.rb:177:in `double_down': undefined method `push' for 6:Fixnum (NoMethodError)  
-
-# cpu had 15, i had 16 and it didnt bother to hit...
-# house is no longer hitting at all...
 
 # i busted by hitting 21???
 
