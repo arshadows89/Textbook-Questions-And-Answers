@@ -1,4 +1,5 @@
 # runs the whole blackjack program
+require 'pry'
 def blackjack
   
   deck = {Ace_of_Diamonds: 11, Two_of_Diamonds: 2, Three_of_Diamonds: 3, Four_of_Diamonds: 4, Five_of_Diamonds: 5, Six_of_Diamonds: 6, Seven_of_Diamonds: 7, Eight_of_Diamonds: 8, Nine_of_Diamonds: 9, Ten_of_Diamonds: 10, Jack_of_Diamonds: 10, Queen_of_Diamonds: 10, King_of_Diamonds: 10, Ace_of_Spades: 11, Two_of_Spades: 2, Three_of_Spades: 3, Four_of_Spades: 4, Five_of_Spades: 5, Six_of_Spades: 6, Seven_of_Spades: 7, Eight_of_Spades: 8, Nine_of_Spades: 9, Ten_of_Spades: 10, Jack_of_Spades: 10, Queen_of_Spades: 10, King_of_Spades: 10, Ace_of_Diamonds: 11, Two_of_Diamonds: 2, Three_of_Diamonds: 3, Four_of_Diamonds: 4, Five_of_Diamonds: 5, Six_of_Diamonds: 6, Seven_of_Diamonds: 7, Eight_of_Diamonds: 8, Nine_of_Diamonds: 9, Ten_of_Diamonds: 10, Jack_of_Diamonds: 10, Queen_of_Diamonds: 10, King_of_Diamonds: 10, Ace_of_Clubs: 11, Two_of_Clubs: 2, Three_of_Clubs: 3, Four_of_Clubs: 4, Five_of_Clubs: 5, Six_of_Clubs: 6, Seven_of_Clubs: 7, Eight_of_Clubs: 8, Nine_of_Clubs: 9, Ten_of_Clubs: 10, Jack_of_Clubs: 10, Queen_of_Clubs: 10, King_of_Clubs: 10, Ace_of_Hearts: 11, Two_of_Hearts: 2, Three_of_Hearts: 3, Four_of_Hearts: 4, Five_of_Hearts: 5, Six_of_Hearts: 6, Seven_of_Hearts: 7, Eight_of_Hearts: 8, Nine_of_Hearts: 9, Ten_of_Hearts: 10, Jack_of_Hearts: 10, Queen_of_Hearts: 10, King_of_Hearts: 10}
@@ -108,9 +109,8 @@ def blackjack
     players_actions_reply = gets.chomp
     while players_actions_reply.downcase != 'stay'
       #if reply is 'stay' then program ends
-      if players_actions_reply.downcase == 'stay' 
-        #elsif reply is 'hit' then program will loop and update board
-      elsif players_actions_reply.downcase == 'hit'
+      binding.pry
+      if players_actions_reply.downcase == 'hit'
         players_cards.push (the_draw(deck))
         players_cards_value = card_value(players_cards_value, players_cards)
         board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
@@ -125,31 +125,36 @@ def blackjack
               play_again
               exit
             else
+              #could be bellow here
               players_actions(players_cards_two_value, players_cards_two, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
-              exit
+              exit 
             end
           end
         else
           players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
           exit
         end
-        #they didn't enter hit or stay
       else
          puts 'You didn\'t enter hit or stay. Please try again.'
         players_actions_reply = gets.chomp
       end
     end
+    binding.pry
   end
   
   #Computers action, (stays at anything at 17 and above)
-  def computers_actions(computers_cards_value, computers_cards, deck)
-    while computers_cards_value.to_i < 17
-      computers_cards.push (the_draw(deck))
-      computers_cards_value = card_value(computers_cards_value, computers_cards)
-      if computers_cards_value.to_i > 21 and computers_cards.index{ |x, y| y == 11 } == true
-        card_value_one(computers_cards)
-        computers_actions(computers_cards_value, computers_cards, deck)
+  def computers_actions(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value)
+    while (computers_cards_value.to_i < players_cards_value.to_i) or (computers_cards_value.to_i < players_cards_two_value.to_i)
+      if computers_cards_value.to_i > 17
         exit
+      else
+        computers_cards.push (the_draw(deck))
+        computers_cards_value = card_value(computers_cards_value, computers_cards)
+        if (computers_cards_value.to_i > 21) and (computers_cards.index{ |x, y| y == 11 } == true)
+          card_value_one(computers_cards)
+          computers_actions(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value)  
+          exit
+        end
       end
     end
     return computers_cards_value
@@ -245,10 +250,11 @@ def blackjack
   computers_cards_value = card_value(computers_cards_value, computers_cards)
   board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
   blackjack?(players_cards_value, computers_cards_value, players_cards_two_value)
-  double_down(players_cards)
+  double_down(players_cards, deck)
   players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
   computers_cards = computers_cards.push(hidden_computer_card)
-  computers_actions(computers_cards_value, computers_cards, deck)
+  computers_cards_value = card_value(computers_cards_value, computers_cards)
+  computers_actions(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
   board_show_all(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
   who_won?(players_cards_value, computers_cards_value, players_cards_two_value)
@@ -267,8 +273,21 @@ blackjack
 
 #after multiple hits, stay ends program
 
-#check 187 who win, players_cards_two_value doesnt udnerstand
 
 #house hit on queen and jack???
 
 # my double down detection might thinkg 10 queen jack king all are same
+
+# when i win with blackjack it shows this BlackJack                                 Computers Cards                 Computers Cards Value = 0                                                                                         Four_of_Diamonds, Three_of_Spades, Hidden Card  
+
+# if house has a greater value then you when you stay it wont hit
+
+
+#a.rb:177:in `double_down': undefined method `push' for 6:Fixnum (NoMethodError)  
+
+# cpu had 15, i had 16 and it didnt bother to hit...
+# house is no longer hitting at all...
+
+# i busted by hitting 21???
+
+#a.rb:174:in `double_down': undefined method `push' for 11:Fixnum (NoMethodError)        
