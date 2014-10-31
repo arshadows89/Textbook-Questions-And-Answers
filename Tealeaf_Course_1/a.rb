@@ -43,6 +43,7 @@ def blackjack
       print ('').center(linewidth / 3)
       cards_print(players_cards_two)
     end
+    puts ''
     print ('').center(linewidth / 3)
     cards_print(players_cards)
     puts '' 
@@ -85,10 +86,14 @@ def blackjack
   end
   
   #Asking the player to hit or stay
-  def players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
+    def players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
+      if players_cards_two_value > 21
+        puts 'Busted on first double down hand!'
+      end
     puts 'You have '+players_cards_value.to_s+' right now. Would you like to hit or stay? (type hit or stay to perform said action)'
     players_actions_reply = gets.chomp
     while players_actions_reply.downcase != 'stay'
+      binding.pry
       #if reply is 'stay' then program ends
       if players_actions_reply.downcase == 'hit'
         players_cards.push (the_draw(deck))
@@ -100,18 +105,50 @@ def blackjack
             players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
             exit
           else
-            if players_cards_two_value == 0
-              puts 'Busted. You went over 21. You Lose'
+            if (players_cards_value > 21) and (players_cards_two_value > 21)
+              puts 'Busted on both hands. You went over 21. You Lose'
               play_again
               exit
-            else
-              players_actions(players_cards_two_value, players_cards_two, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
-              exit 
+            elsif (players_cards_value > 21) and (players_cards_two_value == 0)
+              puts 'Busted! You went over 21. You Lose'
+              play_again
+              exit
+              #last statement is if players_cards is
+            elsif (players_cards_value > 21) and (players_cards_two_value > 0) and (players_cards_value <= 21)
             end
           end
         else
           players_actions_reply = 'stay'
           players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
+        end
+      else
+         puts 'You didn\'t enter hit or stay. Please try again.'
+        players_actions_reply = gets.chomp
+      end
+    end
+  end
+  
+  # method for players action when double downed
+  def players_actions_two(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
+    puts 'You have '+players_cards_two_value.to_s+' right now. Would you like to hit or stay? (type hit or stay to perform said action)'
+    players_actions_reply = gets.chomp
+    while players_actions_reply.downcase != 'stay'
+      if players_actions_reply.downcase == 'hit'
+        players_cards_two.push (the_draw(deck))
+        players_cards_two_value = card_value(players_cards_two_value, players_cards_two)
+        board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+        if players_cards_two_value > 21
+          if players_cards_two.index{ |x, y| y == 11 } == true
+            card_value_one(players_cards_two)
+            players_actions_two(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
+            exit
+          else
+            puts 'Busted. You went over 21.'
+            players_actions_reply = 'stay'
+          end
+        else
+          players_actions_reply = 'stay'
+          players_actions_two(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
         end
       else
          puts 'You didn\'t enter hit or stay. Please try again.'
@@ -227,7 +264,7 @@ def blackjack
   computers_cards_value = card_value(computers_cards_value, computers_cards)
   board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
   blackjack?(players_cards_value, computers_cards_value, players_cards_two_value)
-  #checking for doubledownu
+  #checking for doubledown
   double_down_reply = double_down_question(players_cards, deck, players_cards_two)
   if double_down_reply == 'yes'
     players_cards_two = players_cards_two.push(players_cards[1])
@@ -236,10 +273,11 @@ def blackjack
     players_cards.delete_at(1)
     players_cards.push(the_draw(deck))
     players_cards_value = card_value(players_cards_value, players_cards)
+    board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+    blackjack?(players_cards_value, computers_cards_value, players_cards_two_value)
+    players_actions_two(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
+    players_cards_two_value = card_value(players_cards_two_value, players_cards_two)
   end
-  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
-  players_actions(players_cards_two_value, players_cards_two, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
-  # should add second players_action method for players_cards_two here
   board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
   players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
   players_cards_value = card_value(players_cards_value, players_cards)
@@ -264,6 +302,7 @@ blackjack
 #hit 21 on my 3rd card doesnt register if i won or not...
 
 # my double down detection might thinkg 10 queen jack king all are same
+#to fix this we just need the program to detect the first 3 letters in |x, y| x and if they match the other one then we know its a match
 # if i stay after double down, program ends, check if there is a exit in any of the new stuff i added for double down causing issues.
 # after doubling down_it just asks me to hit on the first set... need to run another player action on the second set if we have cards in double down
 
