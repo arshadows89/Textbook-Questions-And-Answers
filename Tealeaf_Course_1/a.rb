@@ -230,19 +230,17 @@ def blackjack
   #checking for doubledownu
   double_down_reply = double_down_question(players_cards, deck, players_cards_two)
   if double_down_reply == 'yes'
-    #gets players_cards_two value
     players_cards_two = players_cards_two.push(players_cards[1])
     players_cards_two.push(the_draw(deck))
     players_cards_two_value = card_value(players_cards_two_value, players_cards_two)
-    #check player_card_two and value
-    binding.pry
-    #gets players_cards value
     players_cards.delete_at(1)
-players_cards.push(the_draw(deck))
+    players_cards.push(the_draw(deck))
     players_cards_value = card_value(players_cards_value, players_cards)
-    #check players_cards and value and check deck length
-    binding.pry
   end
+  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+  players_actions(players_cards_two_value, players_cards_two, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
+  # should add second players_action method for players_cards_two here
+  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
   players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
   players_cards_value = card_value(players_cards_value, players_cards)
   computers_cards = computers_cards.push(hidden_computer_card)
@@ -266,7 +264,7 @@ blackjack
 #hit 21 on my 3rd card doesnt register if i won or not...
 
 # my double down detection might thinkg 10 queen jack king all are same
-# so double down_two works, need to fix double_down 1 card value
+# if i stay after double down, program ends, check if there is a exit in any of the new stuff i added for double down causing issues.
 # after doubling down_it just asks me to hit on the first set... need to run another player action on the second set if we have cards in double down
 
 #i stay at 9 computer has 11 the i lose and it shows nine, two, hidden card on board...
