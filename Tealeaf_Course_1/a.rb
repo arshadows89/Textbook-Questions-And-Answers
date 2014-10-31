@@ -10,6 +10,7 @@ def blackjack
   players_cards_value = 0
   players_cards_two_value = 0
   computers_cards_value = 0
+  double_down_reply = 'no'
   
   #The Draw, picks a card and removes it from the deck
   def the_draw(deck)
@@ -136,9 +137,9 @@ def blackjack
     end
     return computers_cards_value
   end
-    
-  # Checks to see if the player wants to double down or not
-  def double_down(players_cards, deck)
+  
+  # asking them if they want to double down
+  def double_down_question(players_cards, deck, players_cards_two)
     double_down_value = []
     players_cards.each {|x, y| double_down_value.push(y)}
     if double_down_value[0] == double_down_value[1]
@@ -146,19 +147,14 @@ def blackjack
       double_down_reply = gets.chomp
       while double_down_reply.downcase != 'no'
         if double_down_reply.downcase == 'yes'
-          players_cards = double_down_value[0]
-          players_cards_two = double_down_value[1]
-          binding.pry
-          #what am i doing here....
-          # looks like i am adding another card to player_cards... push might not be the right command
-          players_cards.push (the_draw(deck))
-          players_cards_two.push (the_draw(deck))
+          return 'yes'
+          double_down_reply = 'no'
         elsif double_down_reply.downcase == 'no'
-          exit
+          return 'no'
         else
           puts 'You didn\'t enter Yes or No to the question, do you want to double down? Please respond with Yes or No'
           double_down_reply = gets.chomp
-        end
+          end
       end
     end
   end
@@ -231,7 +227,22 @@ def blackjack
   computers_cards_value = card_value(computers_cards_value, computers_cards)
   board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
   blackjack?(players_cards_value, computers_cards_value, players_cards_two_value)
-  double_down(players_cards, deck)
+  #checking for doubledownu
+  double_down_reply = double_down_question(players_cards, deck, players_cards_two)
+  if double_down_reply == 'yes'
+    #gets players_cards_two value
+    players_cards_two = players_cards_two.push(players_cards[1])
+    players_cards_two.push(the_draw(deck))
+    players_cards_two_value = card_value(players_cards_two_value, players_cards_two)
+    #check player_card_two and value
+    binding.pry
+    #gets players_cards value
+    players_cards.delete_at(1)
+players_cards.push(the_draw(deck))
+    players_cards_value = card_value(players_cards_value, players_cards)
+    #check players_cards and value and check deck length
+    binding.pry
+  end
   players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
   players_cards_value = card_value(players_cards_value, players_cards)
   computers_cards = computers_cards.push(hidden_computer_card)
@@ -255,5 +266,9 @@ blackjack
 #hit 21 on my 3rd card doesnt register if i won or not...
 
 # my double down detection might thinkg 10 queen jack king all are same
-#a.rb:177:in `double_down': undefined method `push' for 6:Fixnum (NoMethodError)  
-#a.rb:174:in `double_down': undefined method `push' for 11:Fixnum (NoMethodError)    
+# so double down_two works, need to fix double_down 1 card value
+# after doubling down_it just asks me to hit on the first set... need to run another player action on the second set if we have cards in double down
+
+#i stay at 9 computer has 11 the i lose and it shows nine, two, hidden card on board...
+#need to create something that detects i stoped my turn and you can not get rid of hidden card... or just place it after my action, the getting rid of hidden card.
+#blackjack turn one, hidden card still show.... maybe redo print board on the players-action detect if 21 thing
