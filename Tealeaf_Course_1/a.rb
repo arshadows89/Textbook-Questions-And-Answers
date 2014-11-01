@@ -21,34 +21,39 @@ def blackjack
   
   #Method to print cards to board
   def cards_print(cards)
-    print_this = cards.each {|x, y| print x.to_s, ', '}
+    print_this = []
+    cards.each {|x, y| print_this.push(x.to_s)}
+    print_this = print_this.join(", ")
+    print_this = print_this.gsub("_", " ")
     end
   
   #The playing board
-    def board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
-    system 'clear'
-    linewidth = 100
-    #add the cards
-    puts (('BlackJack').ljust(linewidth / 3)) + (('Computers Cards').center(linewidth / 3)) + (('Computers Cards Value = '+computers_cards_value.to_s+'').rjust(linewidth / 3))
-    print ('').center(linewidth / 3)
-    cards_print(computers_cards)
-      if (computers_cards.length <= 2) and ((players_cards_value != 21) or (players_cards_two_value != 21))
-      print "Hidden Card"
+      #The playing board
+  def board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+  system 'clear'
+  linewidth = 100
+  #add the cards
+  puts (('BlackJack').ljust(linewidth / 3)) + (('Computers Cards').center(linewidth / 3)) + (('Computers Cards Value = '+computers_cards_value.to_s+'').rjust(linewidth / 3))
+  if ((computers_cards.length <= 2) and ((players_cards_value != 21) or (players_cards_two_value != 21)))
+    if players_cards_two_value >= 21 
+      puts ((cards_print(computers_cards)).center(linewidth))
+    elsif players_cards_value >= 21
+      puts ((cards_print(computers_cards)).center(linewidth))
+    else
+     puts (((cards_print(computers_cards)) + ", Hidden Card").center(linewidth))
     end
-    puts ''
+  else
+    puts ((cards_print(computers_cards)).center(linewidth))
+  end
     puts ''
     puts ''
     if players_cards_two_value >0
       puts (('').ljust(linewidth / 3)) + (('Players Double Down Cards').center(linewidth / 3)) + (('Players Cards Value = '+players_cards_two_value.to_s+'').rjust(linewidth / 3)) 
-      print ('').center(linewidth / 3)
-      cards_print(players_cards_two)
+      puts ((cards_print(players_cards_two)).center(linewidth))
     end
-    puts ''
-    print ('').center(linewidth / 3)
-    cards_print(players_cards)
-    puts '' 
-    puts (('').ljust(linewidth / 3)) + (('Players Cards').center(linewidth / 3)) + (('Players Cards Value = '+players_cards_value.to_s+'').rjust(linewidth / 3)) 
-    end
+    puts ((cards_print(players_cards)).center(linewidth))
+    puts (('').l
+  end
 
   #Dealing the opening hand
   def opening_hand(players_cards, computers_cards, deck)
@@ -93,37 +98,40 @@ def blackjack
     puts 'You have '+players_cards_value.to_s+' right now. Would you like to hit or stay? (type hit or stay to perform said action)'
     players_actions_reply = gets.chomp
     while players_actions_reply.downcase != 'stay'
-      binding.pry
-      #if reply is 'stay' then program ends
-      if players_actions_reply.downcase == 'hit'
-        players_cards.push (the_draw(deck))
-        players_cards_value = card_value(players_cards_value, players_cards)
-        board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
-        if players_cards_value > 21
-          if players_cards.index{ |x, y| y == 11 } == true
-            card_value_one(players_cards)
-            players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
-            exit
-          else
-            if (players_cards_value > 21) and (players_cards_two_value > 21)
-              puts 'Busted on both hands. You went over 21. You Lose'
-              play_again
+      if players_cards_value != 21
+        #if reply is 'stay' then program ends
+        if players_actions_reply.downcase == 'hit'
+          players_cards.push (the_draw(deck))
+          players_cards_value = card_value(players_cards_value, players_cards)
+          board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+          if players_cards_value > 21
+            if players_cards.index{ |x, y| y == 11 } == true
+              card_value_one(players_cards)
+              players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
               exit
-            elsif (players_cards_value > 21) and (players_cards_two_value == 0)
-              puts 'Busted! You went over 21. You Lose'
-              play_again
-              exit
-              #last statement is if players_cards is
-            elsif (players_cards_value > 21) and (players_cards_two_value > 0) and (players_cards_value <= 21)
+            else
+              if (players_cards_value > 21) and (players_cards_two_value > 21)
+                puts 'Busted on both hands. You went over 21. You Lose'
+                play_again
+                exit
+              elsif (players_cards_value > 21) and (players_cards_two_value == 0)
+                puts 'Busted! You went over 21. You Lose'
+                play_again
+                exit
+                #last statement is if players_cards is
+              elsif (players_cards_value > 21) and (players_cards_two_value > 0) and (players_cards_value <= 21)
+              end
             end
+          else
+            players_actions_reply = 'stay'
+            players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
           end
         else
-          players_actions_reply = 'stay'
-          players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
+           puts 'You didn\'t enter hit or stay. Please try again.'
+          players_actions_reply = gets.chomp
         end
       else
-         puts 'You didn\'t enter hit or stay. Please try again.'
-        players_actions_reply = gets.chomp
+        players_actions_reply = 'stay'
       end
     end
   end
@@ -297,21 +305,12 @@ def blackjack
 end
 blackjack
 
-# need to fix the board printing players cards using gsub to get rid of _ for spaces but its not working due to array? (.gsub("_", " ") method isnt working on the array.)
-
-#also the card names are not centering cause its a array?
-
 #######################################
 
 #the ace thing doesnt work...
 
-#hit 21 on my 3rd card doesnt register if i won or not...
 
-# my double down detection might thinkg 10 queen jack king all are same
-#to fix this we just need the program to detect the first 3 letters in |x, y| x and if they match the other one then we know its a match
-# if i stay after double down, program ends, check if there is a exit in any of the new stuff i added for double down causing issues.
-# after doubling down_it just asks me to hit on the first set... need to run another player action on the second set if we have cards in double down
+#player blackjack and shows hidden card... neeed to fix, still showing
+#house wins with 2 cards... still shows hidden
 
-#i stay at 9 computer has 11 the i lose and it shows nine, two, hidden card on board...
-#need to create something that detects i stoped my turn and you can not get rid of hidden card... or just place it after my action, the getting rid of hidden card.
-#blackjack turn one, hidden card still show.... maybe redo print board on the players-action detect if 21 thing
+#if i hit when double down on 2hand then stay game ends...
