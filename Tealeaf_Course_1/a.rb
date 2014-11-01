@@ -1,5 +1,4 @@
 # runs the whole blackjack program
-require 'pry'
 def blackjack
   
   deck = {Ace_of_Spades: 11, Two_of_Spades: 2, Three_of_Spades: 3, Four_of_Spades: 4, Five_of_Spades: 5, Six_of_Spades: 6, Seven_of_Spades: 7, Eight_of_Spades: 8, Nine_of_Spades: 9, Ten_of_Spades: 10, Jack_of_Spades: 10, Queen_of_Spades: 10, King_of_Spades: 10, Ace_of_Diamonds: 11, Two_of_Diamonds: 2, Three_of_Diamonds: 3, Four_of_Diamonds: 4, Five_of_Diamonds: 5, Six_of_Diamonds: 6, Seven_of_Diamonds: 7, Eight_of_Diamonds: 8, Nine_of_Diamonds: 9, Ten_of_Diamonds: 10, Jack_of_Diamonds: 10, Queen_of_Diamonds: 10, King_of_Diamonds: 10, Ace_of_Clubs: 11, Two_of_Clubs: 2, Three_of_Clubs: 3, Four_of_Clubs: 4, Five_of_Clubs: 5, Six_of_Clubs: 6, Seven_of_Clubs: 7, Eight_of_Clubs: 8, Nine_of_Clubs: 9, Ten_of_Clubs: 10, Jack_of_Clubs: 10, Queen_of_Clubs: 10, King_of_Clubs: 10, Ace_of_Hearts: 11, Two_of_Hearts: 2, Three_of_Hearts: 3, Four_of_Hearts: 4, Five_of_Hearts: 5, Six_of_Hearts: 6, Seven_of_Hearts: 7, Eight_of_Hearts: 8, Nine_of_Hearts: 9, Ten_of_Hearts: 10, Jack_of_Hearts: 10, Queen_of_Hearts: 10, King_of_Hearts: 10}
@@ -11,6 +10,7 @@ def blackjack
   players_cards_two_value = 0
   computers_cards_value = 0
   double_down_reply = 'no'
+  player_has_went = 'no'
   
   #The Draw, picks a card and removes it from the deck
   def the_draw(deck)
@@ -29,12 +29,12 @@ def blackjack
   
   #The playing board
       #The playing board
-  def board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+  def board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value, player_has_went)
   system 'clear'
   linewidth = 100
   #add the cards
   puts (('BlackJack').ljust(linewidth / 3)) + (('Computers Cards').center(linewidth / 3)) + (('Computers Cards Value = '+computers_cards_value.to_s+'').rjust(linewidth / 3))
-  if ((computers_cards.length <= 2) and ((players_cards_value != 21) or (players_cards_two_value != 21)))
+  if (player_has_went == 'no')
     if players_cards_two_value >= 21 
       puts ((cards_print(computers_cards)).center(linewidth))
     elsif players_cards_value >= 21
@@ -103,7 +103,7 @@ def blackjack
         if players_actions_reply.downcase == 'hit'
           players_cards.push (the_draw(deck))
           players_cards_value = card_value(players_cards_value, players_cards)
-          board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+          board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value, player_has_went)
           if players_cards_value > 21
             if players_cards.index{ |x, y| y == 11 } == true
               card_value_one(players_cards)
@@ -144,7 +144,7 @@ def blackjack
       if players_actions_reply.downcase == 'hit'
         players_cards_two.push (the_draw(deck))
         players_cards_two_value = card_value(players_cards_two_value, players_cards_two)
-        board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+        board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value, player_has_went)
         if players_cards_two_value > 21
           if players_cards_two.index{ |x, y| y == 11 } == true
             card_value_one(players_cards_two)
@@ -271,12 +271,12 @@ def blackjack
   opening_hand(players_cards, computers_cards, deck)
   players_cards_value = card_value(players_cards_value, players_cards)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
-  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value, player_has_went)
   blackjack?(players_cards_value, computers_cards_value, players_cards_two_value)
   hidden_computer_card = computers_cards[0]
   computers_cards.delete_at(0)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
-  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value, player_has_went)
   blackjack?(players_cards_value, computers_cards_value, players_cards_two_value)
   #checking for doubledown
   double_down_reply = double_down_question(players_cards, deck, players_cards_two)
@@ -287,30 +287,27 @@ def blackjack
     players_cards.delete_at(1)
     players_cards.push(the_draw(deck))
     players_cards_value = card_value(players_cards_value, players_cards)
-    board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+    board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value, player_has_went)
     blackjack?(players_cards_value, computers_cards_value, players_cards_two_value)
     players_actions_two(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
     players_cards_two_value = card_value(players_cards_two_value, players_cards_two)
   end
-  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value, player_has_went)
   players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two)
   players_cards_value = card_value(players_cards_value, players_cards)
+  player_has_went = 'yes'
   computers_cards = computers_cards.push(hidden_computer_card)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
   computers_actions(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
-  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value)
+  board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value, player_has_went)
   who_won?(players_cards_value, computers_cards_value, players_cards_two_value)
 
 end
 blackjack
 
 #######################################
-#require pry up top
 
 #the ace thing doesnt work...
-
-#player blackjack and shows hidden card... neeed to fix, still showing
-#house wins with 2 cards... still shows hidden
 
 #if i hit when double down on 2hand then stay game ends...
