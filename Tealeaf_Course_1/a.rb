@@ -52,7 +52,7 @@ def blackjack
       puts ((cards_print(players_cards_two)).center(linewidth))
     end
     puts ((cards_print(players_cards)).center(linewidth))
-    puts (('').l
+    puts (('').ljust(linewidth / 3)) + (('Players Cards').center(linewidth / 3)) + (('Players Cards Value = '+players_cards_value.to_s+'').rjust(linewidth / 3)) 
   end
 
   #Dealing the opening hand
@@ -306,9 +306,9 @@ end
 blackjack
 
 #######################################
+#require pry up top
 
 #the ace thing doesnt work...
-
 
 #player blackjack and shows hidden card... neeed to fix, still showing
 #house wins with 2 cards... still shows hidden
