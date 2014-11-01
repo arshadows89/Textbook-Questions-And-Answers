@@ -106,7 +106,7 @@ def blackjack
       end
     puts 'You have '+players_cards_value.to_s+' right now. Would you like to hit or stay? (type hit or stay to perform said action)'
     players_actions_reply = gets.chomp
-    while players_actions_reply.downcase != 'stay'
+    while ((players_actions_reply.downcase != 'stay') and (players_cards_two_value != 21))
       if players_cards_value != 21
         #if reply is 'stay' then program ends
         if players_actions_reply.downcase == 'hit'
@@ -150,7 +150,7 @@ def blackjack
   def players_actions_two(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two, player_has_went)
     puts 'You have '+players_cards_two_value.to_s+' right now. Would you like to hit or stay? (type hit or stay to perform said action)'
     players_actions_reply = gets.chomp
-    while players_actions_reply.downcase != 'stay'
+    while ((players_actions_reply.downcase != 'stay') and (players_cards_two_value != 21))
       if players_actions_reply.downcase == 'hit'
         players_cards_two.push (the_draw(deck))
         players_cards_two_value = card_value(players_cards_two_value, players_cards_two)
@@ -319,18 +319,9 @@ def blackjack
 
 end
 blackjack
-
 #######################################
 
-#the ace thing doesnt work...
-#got ace, hit with eight, and then two
-
 #if i hit when double down on 2hand then stay game ends...
+#if i hit with ace it closes out?
 
 #if player hits 21, should just stop asking him if he wants to hit or stay
-
-#when i stay with
-#fails when jack king?
-#fails with jack, ten...
-# stay after 7, 4 , 1 , 8 = 20 failes? maybe 20 is ending program?
-#10 queen didnt fail me?
