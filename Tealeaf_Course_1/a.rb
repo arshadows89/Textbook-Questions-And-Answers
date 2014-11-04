@@ -324,3 +324,9 @@ blackjack
 #if i hit with ace it closes out?
 
 #if player hits 21, should just stop asking him if he wants to hit or stay
+
+#I should change it so that my computers_cards_value = .... should just be Compters_cards_value!(cards, deck, ....) so add the ! to mutate the things!!!!
+
+#see if you can make any methods smaller
+
+# get rid of def blackjack, fix play_again maybe by adding a turns section? make it small by adding computer_turn section a player_turn ext...
