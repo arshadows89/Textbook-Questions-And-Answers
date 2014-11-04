@@ -320,6 +320,8 @@ end
 blackjack
 #######################################
 
+#play_again exit might be my issue.... so test by getting rid of that in the players_action and play_action one turns...
+
 #if i hit when double down on 2hand then stay game ends...
 #if i hit with ace it closes out?
 
@@ -330,3 +332,18 @@ blackjack
 #see if you can make any methods smaller
 
 # get rid of def blackjack, fix play_again maybe by adding a turns section? make it small by adding computer_turn section a player_turn ext...
+
+# each method should do 1 thing
+
+#use do while, so you dont have to create a varialbe beforehand /
+#begin
+#puts 'hey'
+#answer = gets.chomp
+#end while answer.downcase != 'n'
+#this is makes it so i dont have to initialize and put answer = '' before the method
+
+#do need to do if x = true you can just do if x    also    instead of if x - false u can do if !x
+
+#break if reply.downcase == 'n'
+#else ....
+# the break will get u out of the while loop dont have to set reply back to ...
