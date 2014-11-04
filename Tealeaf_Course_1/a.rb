@@ -324,8 +324,3 @@ blackjack
 #if i hit with ace it closes out?
 
 #if player hits 21, should just stop asking him if he wants to hit or stay
-<<<<<<< HEAD
-
-#I should change it so that my computers_cards_value = .... should just be Compters_cards_value!(cards, deck, ....) so add the ! to mutate the things!!!!
-=======
->>>>>>> b65f339530a1245445ad975ae11d58d482bd95fd
