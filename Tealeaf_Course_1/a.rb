@@ -34,7 +34,7 @@ def blackjack
   linewidth = 100
   #add the cards
   puts (('BlackJack').ljust(linewidth / 3)) + (('Computers Cards').center(linewidth / 3)) + (('Computers Cards Value = '+computers_cards_value.to_s+'').rjust(linewidth / 3))
-  if (player_has_went == 'no')
+    if ((player_has_went == 'no') and (computers_cards_value != 21))
     if players_cards_two_value >= 21 
       puts ((cards_print(computers_cards)).center(linewidth))
     elsif players_cards_value >= 21
@@ -118,7 +118,6 @@ def blackjack
               players_cards_value = card_value(players_cards_value, players_cards)
               board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value, player_has_went)
               players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two, player_has_went)
-              exit
             else
               if (players_cards_value > 21) and (players_cards_two_value > 21)
                 puts 'Busted on both hands. You went over 21. You Lose'
@@ -131,6 +130,10 @@ def blackjack
               elsif (players_cards_value > 21) and (players_cards_two_value > 0) and (players_cards_value <= 21)
               end
             end
+          elsif players_cards_value == 21
+            puts ' You got 21'
+            players_actions_reply = 'stay'
+            break
           else
             players_actions_reply = 'stay'
             players_actions(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two, player_has_went)
@@ -160,11 +163,14 @@ def blackjack
             players_cards_two_value = card_value(players_cards_two_value, players_cards_two)
             board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value, player_has_went)
             players_actions_two(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two, player_has_went)
-            exit
           else
             puts 'Busted. You went over 21.'
             players_actions_reply = 'stay'
           end
+        elsif players_cards_value == 21
+          puts ' You got 21'
+          players_actions_reply = 'stay'
+          break
         else
           players_actions_reply = 'stay'
           players_actions_two(players_cards_value, players_cards, deck, computers_cards_value, computers_cards, players_cards_two_value, players_cards_two, player_has_went)
@@ -177,7 +183,7 @@ def blackjack
   end
   
   #Computers action, (stays at anything at 17 and above)
-  def computers_actions(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value)
+  def computers_actions(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value, players_cards, players_cards_two, player_has_went)
     while (computers_cards_value.to_i < players_cards_value.to_i) or (computers_cards_value.to_i < players_cards_two_value.to_i)
       if computers_cards_value.to_i > 17
         exit
@@ -188,8 +194,7 @@ def blackjack
           card_value_one(computers_cards)
           computers_cards_value = card_value(computers_cards_value, computers_cards)
           board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value, player_has_went)
-          computers_actions(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value)  
-          exit
+          computers_actions(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value, players_cards, players_cards_two, player_has_went)
         end
       end
     end
@@ -311,7 +316,7 @@ def blackjack
   player_has_went = 'yes'
   computers_cards = computers_cards.push(hidden_computer_card)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
-  computers_actions(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value)
+  computers_actions(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value, players_cards, players_cards_two, player_has_went)
   computers_cards_value = card_value(computers_cards_value, computers_cards)
   board(computers_cards_value, players_cards_value, players_cards, computers_cards, players_cards_two, players_cards_two_value, player_has_went)
   who_won?(players_cards_value, computers_cards_value, players_cards_two_value)
@@ -320,12 +325,19 @@ end
 blackjack
 #######################################
 
-#play_again exit might be my issue.... so test by getting rid of that in the players_action and play_action one turns...
+#issue that might still exist....
+#first stay works fine on doubledown, but if i hit then stay, it will hit twice
 
-#if i hit when double down on 2hand then stay game ends...
-#if i hit with ace it closes out?
+#3 8 then i hit ace then i hit 4 then i stay but hit six... (total value 22) something wrong with ace...
 
-#if player hits 21, should just stop asking him if he wants to hit or stay
+#player 2 hand went over 23 ask if i still wanted to hit... i say stay... it hits again giving me 33 now 5 6 ace j a q (cards)
+# need a exit probably before the players_actions example 167
+
+#no ace run or double down i get 3 2 6 k total 21 and program exits (no computer calculations happened)
+
+# if detectection_for_ace(players_cards) == true 116.... maybe changed the detection == to false just so it doesnt keep looping into it...
+
+###############################
 
 #I should change it so that my computers_cards_value = .... should just be Compters_cards_value!(cards, deck, ....) so add the ! to mutate the things!!!!
 
