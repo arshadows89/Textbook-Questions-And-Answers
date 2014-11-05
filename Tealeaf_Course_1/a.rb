@@ -337,6 +337,11 @@ blackjack
 
 # if detectection_for_ace(players_cards) == true 116.... maybe changed the detection == to false just so it doesnt keep looping into it...
 
+#if i remove the restart whole program then i need to redo my deck 
+#add something like if deck length is less then x then remake original deck
+#only do this if i add the turns method and get rid of the blackjack method...
+#dont se them = to eachoth have it copy the array.
+
 ###############################
 
 #I should change it so that my computers_cards_value = .... should just be Compters_cards_value!(cards, deck, ....) so add the ! to mutate the things!!!!
