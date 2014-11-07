@@ -45,4 +45,4 @@ puts car_one.color       # black
 puts car_one.year        # 1999
 #car_one.year = '2000' fails
 car_one.spray_paint('blue')
-puts car_one.color
+puts car_one.color       # blue
