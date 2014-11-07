@@ -1,0 +1,18 @@
+
+[1mFrom:[0m /home/action/Tealeaf_Course_1/a.rb @ line 147 Object#computers_actions:
+
+    [1;34m146[0m: [32mdef[0m [1;34mcomputers_actions[0m(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value)
+ => [1;34m147[0m:   binding.pry 
+    [1;34m148[0m:   [32mwhile[0m (computers_cards_value.to_i < [1;34m17[0m) [32mor[0m ((computers_cards_value < players_cards_value) [32mand[0m (computers_cards_value < players_cards_two_value))
+    [1;34m149[0m:     computers_cards.push (the_draw(deck))
+    [1;34m150[0m:     computers_cards_value = card_value(computers_cards_value, computers_cards)
+    [1;34m151[0m:     binding.pry 
+    [1;34m152[0m:     [32mif[0m (computers_cards_value.to_i > [1;34m21[0m) [32mand[0m (computers_cards.index{ |x, y| y == [1;34m11[0m } == [1;36mtrue[0m)
+    [1;34m153[0m:       card_value_one(computers_cards)
+    [1;34m154[0m:       computers_actions(computers_cards_value, computers_cards, deck, players_cards_value, players_cards_two_value)  
+    [1;34m155[0m:       exit
+    [1;34m156[0m:     [32mend[0m
+    [1;34m157[0m:   [32mend[0m
+    [1;34m158[0m:   [32mreturn[0m computers_cards_value
+    [1;34m159[0m: [32mend[0m
+
